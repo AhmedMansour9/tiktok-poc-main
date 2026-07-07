@@ -12,6 +12,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 interface Props {
   url: string;
   isActive: boolean;
+  height?: number;
 }
 
 function extractVideoId(url: string): string {
@@ -79,7 +80,7 @@ function buildPage(videoId: string): string {
   `;
 }
 
-export default function TikTokEmbed({ url, isActive }: Props) {
+export default function TikTokEmbed({ url, isActive, height = SCREEN_HEIGHT }: Props) {
   const webViewRef = useRef<RNWebView>(null);
   const isReadyRef = useRef(false);
   const videoId = extractVideoId(url);
@@ -124,11 +125,11 @@ export default function TikTokEmbed({ url, isActive }: Props) {
   };
 
   return (
-    <View style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT }}>
+    <View style={{ width: SCREEN_WIDTH, height }}>
       <WebView
         ref={webViewRef}
         source={{ uri: playerUrl }}
-        style={{ width: SCREEN_WIDTH, height: SCREEN_HEIGHT, backgroundColor: '#000' }}
+        style={{ width: SCREEN_WIDTH, height, backgroundColor: '#000' }}
         javaScriptEnabled
         domStorageEnabled
         allowsInlineMediaPlayback
