@@ -13,6 +13,8 @@ import {
 import TikTokPlayer from '../components/TikTokPlayer';
 import { useShorts } from '../hooks/useShorts';
 import { Video } from '../types/Video';
+import LoadingView from '../../../core/components/LoadingView';
+import ErrorView from '../../../core/components/ErrorView';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -52,29 +54,17 @@ export default function ShortsScreen() {
   );
 
   if (loading) {
-    return (
-      <View className="flex-1 items-center justify-center bg-black">
-        <ActivityIndicator size="large" color="#ffffff" />
-      </View>
-    );
+    return <LoadingView />;
   }
 
   if (error) {
     return (
-      <View className="flex-1 items-center justify-center bg-black px-6">
-        <Text className="text-white text-lg text-center">
-          {error}
-        </Text>
-
-        <TouchableOpacity
-          className="mt-6 bg-white rounded-lg px-6 py-3"
-          onPress={refresh}
-        >
-          <Text className="text-black font-semibold">
-            Retry
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <ErrorView
+        title="Unable to load videos"
+        message={error}
+        retryText="Try Again"
+        onRetry={refresh}
+      />
     );
   }
 
