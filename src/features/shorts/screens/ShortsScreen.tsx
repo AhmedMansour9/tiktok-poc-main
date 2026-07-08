@@ -1,9 +1,12 @@
 import React, { useCallback, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   LayoutChangeEvent,
   ListRenderItemInfo,
+  Text,
+  TouchableOpacity,
   View,
   ViewToken,
 } from 'react-native';
@@ -14,7 +17,8 @@ import { Video } from '../types/Video';
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function ShortsScreen() {
-  const { videos } = useShorts();
+  const { videos, loading, error, refresh } = useShorts();
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const [itemHeight, setItemHeight] = useState(SCREEN_HEIGHT);
@@ -32,7 +36,9 @@ export default function ShortsScreen() {
     []
   );
 
-  const viewabilityConfig = useRef({ itemVisiblePercentThreshold: 50 }).current;
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current;
 
   const renderItem = useCallback(
     ({ item, index }: ListRenderItemInfo<Video>) => (
@@ -44,6 +50,33 @@ export default function ShortsScreen() {
     ),
     [activeIndex, isScrolling, itemHeight]
   );
+
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-black">
+        <ActivityIndicator size="large" color="#ffffff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View className="flex-1 items-center justify-center bg-black px-6">
+        <Text className="text-white text-lg text-center">
+          {error}
+        </Text>
+
+        <TouchableOpacity
+          className="mt-6 bg-white rounded-lg px-6 py-3"
+          onPress={refresh}
+        >
+          <Text className="text-black font-semibold">
+            Retry
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-black" onLayout={onLayout}>
