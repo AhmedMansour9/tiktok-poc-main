@@ -1,0 +1,13 @@
+syntax = 'proto3';
+import "Common.V1.proto";
+package Example.V1;
+
+message PingRequest {
+  string message = 1;
+  repeated Common.V1.KeyValuePair metadata = 2;
+}
+
+message PingResponse {
+  string message = 1;
+  string serverTime = 2;
+}

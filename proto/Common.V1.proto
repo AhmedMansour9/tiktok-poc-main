@@ -1,0 +1,8 @@
+syntax = 'proto3';
+package Common.V1;
+
+// Generic key/value pair, reusable across any request/response message.
+message KeyValuePair {
+  string key = 1;
+  string value = 2;
+}

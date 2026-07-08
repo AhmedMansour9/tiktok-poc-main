@@ -2,11 +2,14 @@ import './global.css';
 import { useState } from 'react';
 import { StatusBar, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import BottomTabBar, { TabKey } from './components/BottomTabBar';
-import HomeScreen from './screens/HomeScreen';
-import SearchScreen from './screens/SearchScreen';
-import ShortsScreen from './screens/ShortsScreen';
-import ProfileScreen from './screens/ProfileScreen';
+import BottomTabBar, { TabKey } from './src/core/components/BottomTabBar';
+import { initGrpc } from './src/core/grpc/config';
+import HomeScreen from './src/features/home/screens/HomeScreen';
+import SearchScreen from './src/features/search/screens/SearchScreen';
+import ShortsScreen from './src/features/shorts/screens/ShortsScreen';
+import ProfileScreen from './src/features/profile/screens/ProfileScreen';
+
+initGrpc();
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState<TabKey>('shorts');

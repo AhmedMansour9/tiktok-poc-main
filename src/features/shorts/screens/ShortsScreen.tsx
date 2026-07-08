@@ -7,14 +7,14 @@ import {
   View,
   ViewToken,
 } from 'react-native';
-import TikTokEmbed from '../components/TikTokEmbed';
-import { TIKTOK_VIDEOS } from '../data/videos';
+import TikTokPlayer from '../components/TikTokPlayer';
+import { useShorts } from '../hooks/useShorts';
+import { Video } from '../types/Video';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-type Video = { id: string; url: string };
-
 export default function ShortsScreen() {
+  const { videos } = useShorts();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const [itemHeight, setItemHeight] = useState(SCREEN_HEIGHT);
@@ -36,7 +36,7 @@ export default function ShortsScreen() {
 
   const renderItem = useCallback(
     ({ item, index }: ListRenderItemInfo<Video>) => (
-      <TikTokEmbed
+      <TikTokPlayer
         url={item.url}
         isActive={index === activeIndex && !isScrolling}
         height={itemHeight}
@@ -48,7 +48,7 @@ export default function ShortsScreen() {
   return (
     <View className="flex-1 bg-black" onLayout={onLayout}>
       <FlatList
-        data={TIKTOK_VIDEOS}
+        data={videos}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         pagingEnabled

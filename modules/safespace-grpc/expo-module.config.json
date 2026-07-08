@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["SafeSpaceGrpcModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.safespacegrpc.SafeSpaceGrpcModule"]
+  }
+}

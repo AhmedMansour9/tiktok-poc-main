@@ -1,0 +1,52 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+  id 'com.google.protobuf' version '0.9.4'
+}
+
+group = 'expo.modules.safespacegrpc'
+version = '0.1.0'
+
+android {
+  namespace "expo.modules.safespacegrpc"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+  }
+  lintOptions {
+    abortOnError false
+  }
+}
+
+dependencies {
+  implementation 'io.grpc:grpc-okhttp:1.68.0'
+  implementation 'io.grpc:grpc-protobuf-lite:1.68.0'
+  implementation 'io.grpc:grpc-stub:1.68.0'
+  implementation 'com.google.protobuf:protobuf-javalite:4.28.2'
+  compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+}
+
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:4.28.2"
+  }
+  plugins {
+    grpc {
+      artifact = "io.grpc:protoc-gen-grpc-java:1.68.0"
+    }
+  }
+  generateProtoTasks {
+    all().each { task ->
+      task.builtins {
+        java {
+          option 'lite'
+        }
+      }
+      task.plugins {
+        grpc {
+          option 'lite'
+        }
+      }
+    }
+  }
+}

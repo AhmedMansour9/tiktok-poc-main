@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# local module build artifacts
+modules/**/android/build/
+modules/**/android/.cxx/
+modules/**/ios/build/
