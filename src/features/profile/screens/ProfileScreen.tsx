@@ -2,8 +2,7 @@ import { Button, Text, TextInput, View } from 'react-native';
 import { useProfile } from '../hooks/useProfile';
 
 export default function ProfileScreen() {
-  const { state, dispatch } = useProfile();
-  const { request } = state;
+  const { message, setMessage, request, sendPing } = useProfile();
 
   return (
     <View className="flex-1 bg-neutral-200 items-center justify-center px-6">
@@ -11,13 +10,13 @@ export default function ProfileScreen() {
       <TextInput
         className="w-full bg-white rounded-md px-3 py-2 mb-3"
         placeholder="message"
-        value={state.message}
-        onChangeText={(message) => dispatch({ type: 'MessageChanged', message })}
+        value={message}
+        onChangeText={setMessage}
       />
       <Button
         title="Send"
         disabled={request.status === 'loading'}
-        onPress={() => dispatch({ type: 'SendPing' })}
+        onPress={sendPing}
       />
       {request.status === 'loading' && <Text className="mt-4 text-center">Sending...</Text>}
       {request.status === 'success' && (

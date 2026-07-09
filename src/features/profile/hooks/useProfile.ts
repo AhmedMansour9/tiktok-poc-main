@@ -1,52 +1,27 @@
-import { useCallback, useReducer } from 'react';
+import { useState } from 'react';
 import ProfileRepository from '../repositories/ProfileRepository';
-import { initialProfileUiState, ProfileIntent, ProfileUiState } from '../types/ProfileUiState';
-
-type Action =
-  | { type: 'MessageChanged'; message: string }
-  | { type: 'PingStarted' }
-  | { type: 'PingSucceeded'; message: string; serverTime: string }
-  | { type: 'PingFailed'; error: string };
-
-function reduce(state: ProfileUiState, action: Action): ProfileUiState {
-  switch (action.type) {
-    case 'MessageChanged':
-      return { ...state, message: action.message };
-    case 'PingStarted':
-      return { ...state, request: { status: 'loading' } };
-    case 'PingSucceeded':
-      return { ...state, request: { status: 'success', message: action.message, serverTime: action.serverTime } };
-    case 'PingFailed':
-      return { ...state, request: { status: 'error', error: action.error } };
-  }
-}
+import { PingRequestState } from '../types/ProfileUiState';
 
 export interface ProfileViewModel {
-  state: ProfileUiState;
-  dispatch(intent: ProfileIntent): void;
+  message: string;
+  setMessage(message: string): void;
+  request: PingRequestState;
+  sendPing(): void;
 }
 
 export function useProfile(): ProfileViewModel {
-  const [state, dispatchAction] = useReducer(reduce, initialProfileUiState);
+  const [message, setMessage] = useState('hello');
+  const [request, setRequest] = useState<PingRequestState>({ status: 'idle' });
 
-  const dispatch = useCallback(
-    (intent: ProfileIntent) => {
-      switch (intent.type) {
-        case 'MessageChanged':
-          dispatchAction({ type: 'MessageChanged', message: intent.message });
-          return;
-        case 'SendPing':
-          dispatchAction({ type: 'PingStarted' });
-          ProfileRepository.ping(state.message)
-            .then((result) => dispatchAction({ type: 'PingSucceeded', ...result }))
-            .catch((error: unknown) =>
-              dispatchAction({ type: 'PingFailed', error: error instanceof Error ? error.message : String(error) })
-            );
-          return;
-      }
-    },
-    [state.message]
-  );
+  const sendPing = async () => {
+    setRequest({ status: 'loading' });
+    try {
+      const result = await ProfileRepository.ping(message);
+      setRequest({ status: 'success', ...result });
+    } catch (error: unknown) {
+      setRequest({ status: 'error', error: error instanceof Error ? error.message : String(error) });
+    }
+  };
 
-  return { state, dispatch };
+  return { message, setMessage, request, sendPing };
 }
