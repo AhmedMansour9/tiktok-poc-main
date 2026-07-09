@@ -2,6 +2,7 @@ import Foundation
 import GRPC
 import NIOCore
 import NIOPosix
+import NIOHPACK
 
 private let authorizationHeaderName = "authorization"
 private let clientVersionHeaderName = "x-safespace-client-version"
@@ -57,16 +58,19 @@ final class GrpcRuntimeClient {
     }
     headers.add(name: clientVersionHeaderName, value: clientVersion)
     var options = CallOptions(customMetadata: headers)
-    options.timeLimit = .timeout(.seconds(grpcDeadlineSeconds))
+    options.timeLimit = TimeLimit.timeout(.seconds(grpcDeadlineSeconds))
     return options
   }
 
-  private func stub(token: String?, clientVersion: String) throws -> Impactyn_Contracts_RuntimeService_V1_RuntimeServiceClient {
-    Impactyn_Contracts_RuntimeService_V1_RuntimeServiceClient(
-      channel: try getChannel(),
-      defaultCallOptions: callOptions(token: token, clientVersion: clientVersion)
-    )
-  }
+private func stub(
+  token: String?,
+  clientVersion: String
+) throws -> Impactyn_Contracts_RuntimeService_V1_RuntimeServiceNIOClient {
+  Impactyn_Contracts_RuntimeService_V1_RuntimeServiceNIOClient(
+    channel: try getChannel(),
+    defaultCallOptions: callOptions(token: token, clientVersion: clientVersion)
+  )
+}
 
   func get(
     apiVersion: String, namespace: String?, resource: String, name: String?,
