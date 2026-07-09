@@ -2,14 +2,14 @@ import { useState } from 'react';
 import ProfileRepository from '../repositories/ProfileRepository';
 import { PingRequestState } from '../types/ProfileUiState';
 
-export interface ProfileViewModel {
+export interface ProfileState {
   message: string;
   setMessage(message: string): void;
   request: PingRequestState;
   sendPing(): void;
 }
 
-export function useProfile(): ProfileViewModel {
+export function useProfile(): ProfileState {
   const [message, setMessage] = useState('hello');
   const [request, setRequest] = useState<PingRequestState>({ status: 'idle' });
 
