@@ -1,37 +1,29 @@
 import { useCallback, useEffect, useState } from 'react';
 import ShortsRepository from '../repositories/ShortsRepository';
-import { Video } from '../types/Video';
+import { VideosRequestState } from '../types/ShortsUiState';
+import { idle, loading, requestError, success } from '../../../core/common/BaseState';
 
-export function useShorts() {
-  const [videos, setVideos] = useState<Video[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export interface ShortsState {
+  request: VideosRequestState;
+  refresh(): void;
+}
+
+export function useShorts(): ShortsState {
+  const [request, setRequest] = useState<VideosRequestState>(idle([]));
 
   const loadVideos = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    setRequest((prev) => loading(prev.data));
 
-    try {
-      const result = await ShortsRepository.getVideos();
+    const result = await ShortsRepository.getVideos();
 
-      if (result.success) {
-        setVideos(result.data);
-      } else {
-        setError(result.error);
-      }
-    } finally {
-      setLoading(false);
-    }
+    setRequest((prev) =>
+      result.success ? success(result.data) : requestError(prev.data, result.error)
+    );
   }, []);
 
   useEffect(() => {
     loadVideos();
   }, [loadVideos]);
 
-  return {
-    videos,
-    loading,
-    error,
-    refresh: loadVideos,
-  };
+  return { request, refresh: loadVideos };
 }
