@@ -55,12 +55,14 @@ export default function ShortsScreen() {
   );
 
   const hasVideos = request.data.length > 0;
+  const isLoading = request.status === RequestStatus.Idle || request.status === RequestStatus.Loading;
+  const isError = request.status === RequestStatus.Error;
 
-  if (!hasVideos && (request.status === RequestStatus.Idle || request.status === RequestStatus.Loading)) {
+  if (!hasVideos && isLoading) {
     return <LoadingView />;
   }
 
-  if (!hasVideos && request.status === RequestStatus.Error) {
+  if (!hasVideos && isError) {
     return (
       <ErrorView
         title="Unable to load videos"
