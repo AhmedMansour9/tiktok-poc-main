@@ -1,5 +1,5 @@
-import * as GrpcProto from '../../../core/grpc/proto/generated';
-import { performGrpcRequest } from '../../../core/grpc/runtimeServiceClient';
+import * as GrpcProto from '../../../core/network/grpc/proto/generated';
+import { performGrpcRequest } from '../../../core/network/grpc/runtimeServiceClient';
 
 const { PingRequest, PingResponse } = GrpcProto.Example.V1;
 
