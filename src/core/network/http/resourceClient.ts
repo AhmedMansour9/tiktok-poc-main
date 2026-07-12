@@ -6,6 +6,21 @@ export interface ResourceLocator {
   name?: string | null;
 }
 
+function buildResourcePath(resourceType: string, resourceId: ResourceLocator | null | undefined): string {
+  const namespace = resourceId?.namespace ?? '';
+  const name = resourceId?.name ?? '';
+  return `${NetworkConfig.baseURL}/public/api/v1/resources/${resourceType}/namesapces/${namespace}/names/${name}`;
+}
+
+export function buildResourceUrl(
+  resourceType: string,
+  resourceId: ResourceLocator | null | undefined,
+  sas: string | null | undefined,
+  view: string
+): string {
+  const params = new URLSearchParams({ sas: sas ?? '', view });
+  return `${buildResourcePath(resourceType, resourceId)}?${params.toString()}`;
+}
 
 export async function performExternalResourceRequest<T>(
   resourceType: string,
@@ -13,15 +28,10 @@ export async function performExternalResourceRequest<T>(
   sas: string | null | undefined,
   view: string,
   decode: (bytes: Uint8Array) => T,
-
   notFoundDefault?: () => T
 ): Promise<T> {
-  const namespace = resourceId?.namespace ?? '';
-  const name = resourceId?.name ?? '';
-  const url = `${NetworkConfig.baseURL}/public/api/v1/resources/${resourceType}/namesapces/${namespace}/names/${name}`;
-
   try {
-    const response = await axios.get(url, {
+    const response = await axios.get(buildResourcePath(resourceType, resourceId), {
       responseType: 'arraybuffer',
       params: { sas: sas ?? '', view },
     });
