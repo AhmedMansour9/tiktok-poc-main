@@ -1,5 +1,5 @@
 import * as GrpcProto from '../../../core/network/grpc/proto/generated';
-import { performGrpcRequest } from '../../../core/network/grpc/runtimeServiceClient';
+import { performGrpcRequest, RequestKind } from '../../../core/network/grpc/runtimeServiceClient';
 
 const { PingRequest, PingResponse } = GrpcProto.Example.V1;
 
@@ -13,7 +13,7 @@ class ProfileApi {
     const payload = PingRequest.encode({ message }).finish();
 
     return performGrpcRequest(
-      { kind: 'Execute', resource: 'Example', argument: 'Ping', payload },
+      { kind: RequestKind.EXECUTE, resource: 'Example', argument: 'Ping', payload },
       (bytes) => {
         const response = PingResponse.decode(bytes);
         return { message: response.message, serverTime: response.serverTime };

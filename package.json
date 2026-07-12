@@ -30,7 +30,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "gen:proto": "pbjs -t static-module -w commonjs -o src/core/grpc/proto/generated.js proto/*.proto && pbts -o src/core/grpc/proto/generated.d.ts src/core/grpc/proto/generated.js"
+    "gen:proto": "pbjs -t static-module -w commonjs -o src/core/network/grpc/proto/generated.js proto/*.proto && pbts -o src/core/network/grpc/proto/generated.d.ts src/core/network/grpc/proto/generated.js"
   },
   "private": true
 }

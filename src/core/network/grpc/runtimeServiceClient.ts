@@ -1,11 +1,16 @@
 import SafeSpaceGrpcModule from '../../../../modules/safespace-grpc/src/SafeSpaceGrpcModule';
 import { decodeBase64, encodeBase64 } from './base64';
 
-export type GrpcRequestKind = 'Get' | 'Execute' | 'CreateOrUpdate' | 'Delete';
 
+export enum RequestKind {
+  GET = 'Get',
+  EXECUTE = 'Execute',
+  CREATE_OR_UPDATE = 'CreateOrUpdate',
+  DELETE = 'Delete',
+}
 
 export interface GrpcRequestModel {
-  kind: GrpcRequestKind;
+  kind: RequestKind;
   resource: string;
   apiVersion?: string;
   namespace?: string;
@@ -39,7 +44,7 @@ export async function performGrpcRequest<T>(
   let contentBase64: string;
 
   switch (request.kind) {
-    case 'Get': {
+    case RequestKind.GET: {
       const result = await SafeSpaceGrpcModule.get(
         apiVersion, namespace, request.resource, name,
         request.argument ?? null, token, clientVersion
@@ -47,7 +52,7 @@ export async function performGrpcRequest<T>(
       contentBase64 = result.contentBase64;
       break;
     }
-    case 'Execute': {
+    case RequestKind.EXECUTE: {
       const payloadBase64 = request.payload ? encodeBase64(request.payload) : null;
       const result = await SafeSpaceGrpcModule.execute(
         apiVersion, namespace, request.resource, name,
@@ -56,7 +61,7 @@ export async function performGrpcRequest<T>(
       contentBase64 = result.contentBase64;
       break;
     }
-    case 'CreateOrUpdate': {
+    case RequestKind.CREATE_OR_UPDATE: {
       const payloadBase64 = request.payload ? encodeBase64(request.payload) : null;
       const result = await SafeSpaceGrpcModule.createOrUpdate(
         apiVersion, namespace, request.resource, name,
@@ -65,7 +70,7 @@ export async function performGrpcRequest<T>(
       contentBase64 = result.contentBase64;
       break;
     }
-    case 'Delete': {
+    case RequestKind.DELETE: {
       const result = await SafeSpaceGrpcModule.delete(
         apiVersion, namespace, request.resource, name, token, clientVersion
       );

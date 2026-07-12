@@ -1,0 +1,14 @@
+syntax = 'proto3';
+import "Common.V1.proto";
+package ExternalContent.V1;
+
+
+message GetUserExternalReelsResponse {
+  Common.V1.ResourceToken reelsFeed = 1;
+}
+
+message ExternalReviewPublicView {
+  Common.V1.ResourceId externalReelId = 1;
+  Common.V1.ResourceId externalReelLink = 2;
+  Common.V1.ResourceToken externalFeedId = 3;
+}
