@@ -192,6 +192,19 @@ This keeps the UI independent of the transport layer.
 
 ---
 
+# Generating gRPC Files
+
+1. Add or update `.proto` files in the `proto` folder at the project root.
+2. Run:
+
+```bash
+npm run gen:proto
+```
+
+This generates `generated.js` and `generated.d.ts` inside `src/core/network/grpc/proto`.
+
+---
+
 # Design Principles
 
 This project follows:
