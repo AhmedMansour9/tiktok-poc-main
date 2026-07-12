@@ -1,4 +1,5 @@
 export const NetworkConfig = {
-  baseURL: 'https://api.example.com',
+  baseURL: 'https://cdn.impactyn.io',
   timeout: 15000,
 };
+

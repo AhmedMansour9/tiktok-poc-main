@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { StatusBar, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomTabBar, { TabKey } from './src/core/components/BottomTabBar';
-import { initGrpc } from './src/core/grpc/config';
+import { initGrpc } from './src/core/network/grpc/config';
 import HomeScreen from './src/features/home/screens/HomeScreen';
 import SearchScreen from './src/features/search/screens/SearchScreen';
 import ShortsScreen from './src/features/shorts/screens/ShortsScreen';

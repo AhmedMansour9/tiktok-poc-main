@@ -1,0 +1,22 @@
+syntax = 'proto3';
+import "Common.V1.proto";
+import "google/protobuf/timestamp.proto";
+package Impactyn.Contracts.IndexListPage.V1;
+
+
+message IndexListPageItem {
+  Common.V1.ResourceId itemId = 1;
+  sfixed64 score = 2;
+  string sas = 3;
+  map<string, string> decorations = 4;
+}
+
+message IndexListPageResource {
+  Common.V1.ResourceId nextPage = 1;
+  repeated IndexListPageItem items = 2;
+  string sas = 3;
+  string nextPageSas = 4;
+  google.protobuf.Timestamp notAfter = 5;
+  google.protobuf.Timestamp refreshAt = 6;
+  sfixed64 listCount = 7;
+}

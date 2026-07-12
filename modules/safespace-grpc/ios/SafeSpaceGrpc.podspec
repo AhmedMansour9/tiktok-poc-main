@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
 
   s.dependency 'ExpoModulesCore'
   s.dependency 'SwiftProtobuf', '~> 1.28'
-  s.dependency 'gRPC-Swift', '~> 1.23'
+  s.dependency 'gRPC-Swift', '~> 1.8'
 
   # Swift/Objective-C compatibility
   s.pod_target_xcconfig = {

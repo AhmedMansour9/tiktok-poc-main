@@ -15,11 +15,12 @@ import { useShorts } from '../hooks/useShorts';
 import { Video } from '../types/Video';
 import LoadingView from '../../../core/components/LoadingView';
 import ErrorView from '../../../core/components/ErrorView';
+import { RequestStatus } from '../../../core/common/BaseState';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function ShortsScreen() {
-  const { videos, loading, error, refresh } = useShorts();
+  const { request, refresh } = useShorts();
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -53,15 +54,19 @@ export default function ShortsScreen() {
     [activeIndex, isScrolling, itemHeight]
   );
 
-  if (loading) {
+  const hasVideos = request.data.length > 0;
+  const isLoading = request.status === RequestStatus.Idle || request.status === RequestStatus.Loading;
+  const isError = request.status === RequestStatus.Error;
+
+  if (!hasVideos && isLoading) {
     return <LoadingView />;
   }
 
-  if (error) {
+  if (!hasVideos && isError) {
     return (
       <ErrorView
         title="Unable to load videos"
-        message={error}
+        message={request.error}
         retryText="Try Again"
         onRetry={refresh}
       />
@@ -71,7 +76,7 @@ export default function ShortsScreen() {
   return (
     <View className="flex-1 bg-black" onLayout={onLayout}>
       <FlatList
-        data={videos}
+        data={request.data}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         pagingEnabled
