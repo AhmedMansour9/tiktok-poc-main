@@ -4,7 +4,7 @@ import * as GrpcProto from '../../../core/network/grpc/proto/generated';
 import { performGrpcRequest, RequestKind } from '../../../core/network/grpc/runtimeServiceClient';
 import httpClient from '../../../core/network/http/httpClient';
 import { Endpoints } from '../../../core/network/http/endpoints';
-import { performExternalResourceRequest } from '../../../core/network/http/resourceClient';
+import { performExternalResourceRequest, ResourceView } from '../../../core/network/http/resourceClient';
 
 const { GetUserExternalReelsResponse, ExternalReviewPublicView } = GrpcProto.ExternalContent.V1;
 const { IndexListPageResource } = GrpcProto.Impactyn.Contracts.IndexListPage.V1;
@@ -45,7 +45,7 @@ class ShortsApi {
       'externalFeed',
       token.resourceId,
       token.sas,
-      'rootpage',
+      ResourceView.RootPage,
       (bytes) => IndexListPageResource.decode(bytes),
       () => IndexListPageResource.create()
     );
@@ -56,7 +56,7 @@ class ShortsApi {
       'externalReel',
       item.itemId,
       item.sas,
-      'public',
+      ResourceView.Public,
       (bytes) => ExternalReviewPublicView.decode(bytes)
     );
   }

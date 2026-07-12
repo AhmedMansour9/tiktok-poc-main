@@ -6,6 +6,11 @@ export interface ResourceLocator {
   name?: string | null;
 }
 
+export enum ResourceView {
+  Public = 'public',
+  RootPage = 'rootpage',
+}
+
 function buildResourcePath(resourceType: string, resourceId: ResourceLocator | null | undefined): string {
   const namespace = resourceId?.namespace ?? '';
   const name = resourceId?.name ?? '';
@@ -16,7 +21,7 @@ export function buildResourceUrl(
   resourceType: string,
   resourceId: ResourceLocator | null | undefined,
   sas: string | null | undefined,
-  view: string
+  view: ResourceView
 ): string {
   const params = new URLSearchParams({ sas: sas ?? '', view });
   return `${buildResourcePath(resourceType, resourceId)}?${params.toString()}`;
@@ -26,7 +31,7 @@ export async function performExternalResourceRequest<T>(
   resourceType: string,
   resourceId: ResourceLocator | null | undefined,
   sas: string | null | undefined,
-  view: string,
+  view: ResourceView,
   decode: (bytes: Uint8Array) => T,
   notFoundDefault?: () => T
 ): Promise<T> {

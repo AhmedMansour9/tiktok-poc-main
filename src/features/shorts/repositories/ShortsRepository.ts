@@ -2,7 +2,7 @@ import ShortsApi, { ExternalReviewPublicView } from '../api/ShortsApi';
 import { Video } from '../types/Video';
 import { Result } from '../../../core/common/Result';
 import { safeCall } from '../../../core/common/safeCall';
-import { buildResourceUrl } from '../../../core/network/http/resourceClient';
+import { buildResourceUrl, ResourceView } from '../../../core/network/http/resourceClient';
 
 class ShortsRepository {
   async getVideos(): Promise<Result<Video[]>> {
@@ -32,7 +32,7 @@ class ShortsRepository {
 
     return {
       id: `${externalReelId.namespace}/${externalReelId.name}`,
-      url: buildResourceUrl(externalReelLink.resourceType ?? '', externalReelLink, externalFeedId.sas, 'public'),
+      url: buildResourceUrl(externalReelLink.resourceType ?? '', externalReelLink, externalFeedId.sas, ResourceView.Public),
     };
   };
 }
